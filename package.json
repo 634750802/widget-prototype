@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "json2ts -i src/schema.json -o dist/schema.d.ts --cwd=src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

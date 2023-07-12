@@ -28,10 +28,13 @@
           "description": "Used to display in UI.",
           "minLength": 2,
           "maxLength": 255
+        },
+        "dynamic": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false,
-      "required": ["type", "name"]
+      "required": ["name", "type", "dynamic"]
     }
   ]
 }
