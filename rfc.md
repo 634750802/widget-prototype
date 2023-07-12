@@ -61,3 +61,26 @@ stateDiagram
     E1: Add widget to personal dashboard
     E2: Copy image url to embed into other site (prerender)
 ```
+
+#### Contribute a widget to marketplace (for backend developers)
+
+```mermaid
+
+stateDiagram
+    A --> B
+    B --> C
+    C --> C`: if not provide visualization code
+    C --> D
+    C` --> D
+    D --> E
+    E --> F
+
+
+    A: Learn data structure of our datasource
+    B: Write down SQL and visualization codes (optional)
+    C: Create a PR to widgets repo.
+    C`: Maintainer helps to complete visualization code
+    D: Maintainer verify SQL and visualization
+    E: Maintainer merge PR
+    F: Widget available in marketplace
+```
