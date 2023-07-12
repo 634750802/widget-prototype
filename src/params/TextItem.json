@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "type": "object",
+  "title": "ParamItemText",
+  "allOf": [
+    {
+      "properties": {
+        "type": {
+          "enum": ["text"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Param name, should be unique in param list."
+        },
+        "allowEmpty": {
+          "type": "boolean",
+          "description": "Allow empty input. Default to false",
+          "default": false
+        },
+        "title": {
+          "type": "string",
+          "description": "Used to display in UI.",
+          "minLength": 2,
+          "maxLength": 32
+        },
+        "description": {
+          "type": "string",
+          "description": "Used to display in UI.",
+          "minLength": 2,
+          "maxLength": 255
+        }
+      },
+      "additionalProperties": false,
+      "required": ["type", "name"]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "JSONParser",
+  "type": "object",
+  "properties": {
+    "type": {
+      "enum": ["json"]
+    },
+    "extract": {
+      "type": "string",
+      "default": "$"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["type"]
+}

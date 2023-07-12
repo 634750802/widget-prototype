@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "FilterTransformer",
+  "type": "object",
+  "properties": {
+    "type": {
+      "enum": ["filter"]
+    },
+    "path": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["type", "path"]
+}

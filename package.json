@@ -1,0 +1,20 @@
+{
+  "name": "widget-prototype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-schema-to-typescript": "^13.0.2"
+  },
+  "devDependencies": {
+    "chart.js": "^4.3.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
