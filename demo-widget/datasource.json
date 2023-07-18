@@ -1,0 +1,8 @@
+{
+  "type": "http",
+  "url": "https://api.ossinsight.io/q/analyze-stars-history",
+  "parser": {
+    "type": "json",
+    "extract": "/data"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "from": {
+    "type": "date"
+  },
+  "to": {
+    "type": "date"
+  },
+  "collection_id": {
+    "type": "repo-id"
+  }
+}

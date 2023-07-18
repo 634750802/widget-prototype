@@ -1,0 +1,12 @@
+{
+  "name": "@ossinsight/widget-analyze-repo-stars-history",
+  "version": "1.0.0",
+  "description": "Analyze stars history for repository",
+  "keywords": ["repository"],
+  "author": {
+    "name": "OSSInsight",
+    "url": "https://github.com/pingcap/ossinsight",
+    "email": "ossinsight@pingcap.com"
+  },
+  "type": "module"
+}

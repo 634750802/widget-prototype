@@ -1,86 +1,177 @@
-# Widgets RFC
-
-> WIP
+# Widgets 1.0 RFC
 
 ## Concepts
 
-1. [Widget](#widget)
-    1. Datasource
-    2. Visualizations
-    3. Parameters
-2. [Widget instance](#widget-instance)
+- [Datasource](#datasource)
+- [Visualization](#visualization)
+- [Parameters definition](#parameters-definition)
 
-### Widget
+## Components
 
-A widget is a prototype of component contains definition of structured input and visualization.
+- [Renderer](#renderer)
+- [Composer](#composer)
+- [Toolchain](#toolchain)
+- [Creator](#creator) (Future)
 
-#### Datasource
+### Datasource
 
-Datasource defines where widget get the data. Will support:
+Datasource should define:
 
-- `OSSInsight HTTP API`: can access ossinsight data by HTTP endpoints (predefined SQL) with custom variables.
-- `OSSInsight Lite Query`: can access personal data by custom SQL if user has configured OSSInsight Lite database.
+- How to fetch data
+- How to parse data to visualization input format (e.g. parse json then extract by json path)
+- What parameters the datasource fetcher will use.
 
-#### Visualizations
+### Visualization
 
-Widget should provide its visualization method to draw chart or anything on UI. Will support:
+Visualization should define:
 
-- `chartjs`: support use chartjs to draw charts to browser or image file (prerender).
+- Which type of visualization the widget use
+- **Platform independent** and **framework independent** javascript code to transform input to proper render config.
 
-#### Parameters
+The widget 1.0 initial version will support visualization types below:
 
-Widget definition could contain several dynamic parameters to provide UI diversity. User must provide these parameters'
-value when creating widget instance.
+- `echarts`
+- `chartjs`
+- `repo-card`
+- `repo-card-list`
+- `user-card`
+- `user-card-list`
 
-- `runtime` parameter could be changed when displaying on UI, but not available in datasource definition.
-- `non runtime` parameter are immutable outside widget configuration page.
+### Parameters definition
 
-### Widget instance
+All widget could define some parameters to provide flexibility. All defined parameters should be provided during
+rendering.
 
-User can create multiple widget instances from single widget if the widget has dynamic params.
+Both `client side` and `server side` should validate user provided parameters.
 
-## Detailed design
+The widgets 1.0 initial version will support several basic types:
 
-### Diagrams
+- `date`
+- `datetime`
+- `time`
+- `integer`
+- `floating`
+- `text`
 
-#### Create a widget instance
+and also some ossinsight specified types:
 
-```mermaid
+- `repo-id`
+- `user-id`
+- `collection-id`
 
-stateDiagram
-    A --> B
-    B --> C
-    C --> D
-    D --> E1
-    D --> E2
+When use a widget in README or other places, user must provide the parameter value in URL.
 
-    A: Browse widget collections
-    B: Select a widget
-    C: Input required params
-    D: Save to personal widget instances library
-    E1: Add widget to personal dashboard
-    E2: Copy image url to embed into other site (prerender)
-```
+## Renderer
 
-#### Contribute a widget to marketplace (for backend developers)
+A widget renderer should contain:
 
-```mermaid
+- Input Fetcher
+- Visualizer
 
-stateDiagram
-    A --> B
-    B --> C
-    C --> C`: if not provide visualization code
-    C --> D
-    C` --> D
-    D --> E
-    E --> F
+All above components should be implemented on both `server side` and `client side` environments.
 
+### Input Fetcher
 
-    A: Learn data structure of our datasource
-    B: Write down SQL and visualization codes (optional)
-    C: Create a PR to widgets repo.
-    C`: Maintainer helps to complete visualization code
-    D: Maintainer verify SQL and visualization
-    E: Maintainer merge PR
-    F: Widget available in marketplace
-```
+#### Client side
+
+> Client device could not connect to database directly, so
+> all SQL based widget should expose an api to visit database.
+
+Use `fetch` to get data from public api server. Parameters usually provided by URL query params.
+
+#### Serverside
+
+Use `fetch` or SQL client to get data from public or private server. Parameters usually provided by HTTP request URL
+query params.
+
+### Visualizer
+
+Visualizer should directly call compiled js codes to get visualization config.
+
+#### ECharts and ChartJS
+
+These lib requires only config to render data to canvas or svg. On serverside, we could
+use https://www.npmjs.com/package/@napi-rs/canvas to render canvas to PNG.
+
+#### User & Repo card and list
+
+We should provide different codes for each environment.
+
+- client side: react component
+- server side: svg string
+
+## Composer
+
+Widget composer is used to create shared widget page and url. It will display a widget preview and a form for user to
+input parameters fields
+
+## Code organization
+
+Each widget should provide a single npm package. Folder structure:
+
+- `package.json`
+- `visualize.[jt]s`: Visualization code
+- `params.json` (Optional): Parameter definition
+- `datasource.json`: Datasource
+
+### package.json
+
+Required fields:
+
+- `name`
+- `version`
+- `description`
+- `author`
+
+Optional fields:
+
+- `keywords`
+
+Other fields will be ignored by widget renderer and composer.
+
+All dependencies should be added to `dependencies` instead of `devDependencies`.
+
+### visualize.[jt]s
+
+The visualize code should be esm module and export visualization function as default export.
+
+The function takes two parameters: `input` and `ctx`:
+
+- `input`: the data provided by datasource
+- `ctx`: render context, which is provided by widget renderer
+- `ctx.theme`: contains common styles provided by project
+- `ctx.env`: shows the env
+- `ctx.colorScheme`: Color scheme provided by browser (ssr
+  see https://wicg.github.io/user-preference-media-features-headers/)
+- `ctx.parameters`: parameters user provided
+
+The file should also export the `type` as visualize type for renderer to identify which type of visualization library to
+use.
+
+### params.json
+
+### datasource.json
+
+## Toolchain
+
+### `@ossinsight/widgets-nextjs`
+
+next plugin for next to automatically load widgets.
+
+### `@ossinsight/widgets-cli`
+
+cli for develop a ossinsight widget
+
+Commands:
+
+- `dev`: run a widget using a simple next server using `@ossinsight/widgets-nextjs`
+- `validate`: validate a dir is a valid widget folder
+- `render`: render a widget to image. Should be useful for prerender scripts
+
+### `@ossinsight/widgets-types`
+
+TypeScript Definition for widgets visualization code.
+
+## Creator
+
+A component to create widget dynamically. Will introduce in future version.
